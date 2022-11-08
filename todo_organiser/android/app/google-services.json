@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "359831259011",
+    "project_id": "todo-organiser",
+    "storage_bucket": "todo-organiser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359831259011:android:64c9e5ded36e2f537458b6",
+        "android_client_info": {
+          "package_name": "rajinh.todo_organiser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359831259011-50vp4gultfr1epq67h2fgrkl36h6i4p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuZN7Wzv7qUWGlazR_Pg2EQLEV3mqJD_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359831259011-50vp4gultfr1epq67h2fgrkl36h6i4p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
