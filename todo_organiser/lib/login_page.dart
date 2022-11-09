@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +12,44 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Sign In Method
+  Future<void> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    final UserCredential authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    final User? user = authResult.user;
+
+    if (authResult.additionalUserInfo!.isNewUser) {
+      if (user != null) {
+        // Add user document to "Users" collections
+        if (FirebaseAuth.instance.currentUser != null) {
+          await FirebaseFirestore.instance
+              .collection('Users')
+              .doc(FirebaseAuth.instance.currentUser?.uid.toString())
+              .set({
+            'tasks': [],
+            'buckets': [],
+          });
+        }
+      }
+    }
+  }
+
+  Future<void> signInWithGitHub() async {
+    GithubAuthProvider githubProvider = GithubAuthProvider();
+    await FirebaseAuth.instance.signInWithProvider(githubProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Text(
-                      "Welcome back to your Todo Organiser",
+                      "Welcome Back To Your Todo Organiser",
                       textAlign: TextAlign.left,
                       style: GoogleFonts.inter(
                         textStyle: const TextStyle(
@@ -47,53 +86,47 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    Container(
+                    GestureDetector(
+                      onTap: signInWithGoogle,
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
                         decoration: const BoxDecoration(
-                            color: Color.fromRGBO(60, 60, 60, 1),
+                            color: Color.fromARGB(255, 255, 255, 255),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
-                        child: TextField(
-                          cursorColor: Colors.white,
+                        child: Center(
+                            child: Text(
+                          "Google",
                           style: GoogleFonts.inter(
                             textStyle: const TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
-                          ),
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
-                            hintText: "Email",
-                            hintStyle: TextStyle(
-                                color: Color.fromARGB(255, 184, 183, 183)),
-                            border: InputBorder.none,
+                                fontWeight: FontWeight.w700,
+                                color: Color.fromRGBO(41, 41, 41, 1)),
                           ),
                         )),
-                    const SizedBox(height: 15),
-                    Container(
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: signInWithGitHub,
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
                         decoration: const BoxDecoration(
-                            color: Color.fromRGBO(60, 60, 60, 1),
+                            color: Color.fromARGB(255, 31, 31, 31),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
-                        child: TextField(
-                          scrollPadding: const EdgeInsets.only(bottom: 10),
-                          obscureText: true,
-                          cursorColor: Colors.white,
+                        child: Center(
+                            child: Text(
+                          "GitHub",
                           style: GoogleFonts.inter(
                             textStyle: const TextStyle(
                                 fontSize: 15,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w700,
                                 color: Colors.white),
                           ),
-                          decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
-                            hintText: "Password",
-                            hintStyle: TextStyle(
-                                color: Color.fromARGB(255, 184, 183, 183)),
-                            border: InputBorder.none,
-                          ),
-                        ))
+                        )),
+                      ),
+                    ),
                   ],
                 ),
               ),

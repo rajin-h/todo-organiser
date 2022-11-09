@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "359831259011-tk1q9c49l8mt2v7q0ofhr2q4on0ln7p2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rajinh.todo_organiser",
+            "certificate_hash": "acedc91c0e20484cbed972e7bc1553990bb0df9c"
+          }
+        },
+        {
           "client_id": "359831259011-50vp4gultfr1epq67h2fgrkl36h6i4p5.apps.googleusercontent.com",
           "client_type": 3
         }
