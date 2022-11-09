@@ -21,9 +21,50 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser;
 
+  final TextEditingController _taskDescController = TextEditingController();
+  final TextEditingController _taskDifficultyController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _taskDescController.dispose();
+    _taskDifficultyController.dispose();
+    super.dispose();
+  }
+
   // Sign Out Method
   void signOut() {
     FirebaseAuth.instance.signOut();
+  }
+
+  Future addTask() async {
+    if (_taskDescController.text.trim() == "") {
+      return;
+    }
+
+    if (_taskDifficultyController.text.trim() == "") {
+      return;
+    }
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      try {
+        TaskModel taskModel = TaskModel(
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            name: _taskDescController.text.trim(),
+            bucket: '',
+            difficulty: int.parse(_taskDifficultyController.text.trim()));
+        // Add the updated food item
+        await FirebaseFirestore.instance
+            .collection('Tasks')
+            .doc()
+            .set(taskModel.toMap());
+
+        _taskDescController.clear();
+        _taskDifficultyController.clear();
+      } catch (e) {
+        print(e);
+      } finally {}
+    }
   }
 
   @override
@@ -37,7 +78,7 @@ class _HomePageState extends State<HomePage> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 30, right: 30, top: 50, bottom: 50),
+                    left: 30, right: 30, top: 30, bottom: 30),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                     //     })),
                     const SizedBox(height: 20),
                     InputBox(
-                        controller: TextEditingController(),
+                        controller: _taskDescController,
                         labelText: "",
                         isReadOnly: false,
                         isPassword: false,
@@ -121,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                         hintText: "Your Task Name..."),
                     const SizedBox(height: 20),
                     InputBox(
-                        controller: TextEditingController(),
+                        controller: _taskDifficultyController,
                         labelText: "",
                         isReadOnly: false,
                         isPassword: false,
@@ -132,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     DefaultButton(
                       labelText: "Add Task",
-                      onTap: signOut,
+                      onTap: addTask,
                       isPrimary: true,
                     )
                   ],
