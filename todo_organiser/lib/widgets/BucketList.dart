@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_organiser/misc/HexColor.dart';
 import 'package:todo_organiser/models/BucketModel.dart';
 import 'dart:math' as math;
 
@@ -49,13 +50,13 @@ class _BucketListState extends State<BucketList> {
                     bucketModel.name,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),
                   )),
                   width: 115,
                   decoration: BoxDecoration(
-                      color: Colors.deepOrangeAccent,
+                      color: HexColor(bucketModel.colour),
                       borderRadius: BorderRadius.circular(10)),
                 );
               }).toList());

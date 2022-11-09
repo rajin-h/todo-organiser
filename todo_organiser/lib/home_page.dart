@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
             name: _taskDescController.text.trim(),
             bucket: '',
             difficulty: int.parse(_taskDifficultyController.text.trim()));
+
         // Add the updated food item
         await FirebaseFirestore.instance
             .collection('Tasks')

@@ -47,18 +47,18 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                   height: 60,
                   margin: EdgeInsets.only(bottom: 20),
                   padding: EdgeInsets.all(20),
+                  width: 250,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     taskModel.name,
                     textAlign: TextAlign.start,
                     style: GoogleFonts.inter(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.w400),
                   ),
-                  width: 250,
-                  decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      borderRadius: BorderRadius.circular(10)),
                 );
               }).toList());
         }));
