@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:todo_organiser/buckets_page.dart';
-import 'package:todo_organiser/main_page.dart';
+import 'package:todo_organiser/home_page.dart';
 import 'package:todo_organiser/models/BucketModel.dart';
 import 'package:todo_organiser/models/TaskModel.dart';
 import 'package:todo_organiser/widgets/BucketList.dart';
@@ -15,14 +14,14 @@ import 'package:todo_organiser/widgets/UnassignedTaskList.dart';
 import 'misc/FadeInRoute.dart';
 import 'models/UserModel.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class BucketsPage extends StatefulWidget {
+  const BucketsPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<BucketsPage> createState() => _BucketsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _BucketsPageState extends State<BucketsPage> {
   final user = FirebaseAuth.instance.currentUser;
 
   final TextEditingController _taskDescController = TextEditingController();
@@ -38,13 +37,6 @@ class _HomePageState extends State<HomePage> {
 
   // Sign Out Method
   void signOut() {
-    Navigator.push(
-      context,
-      FadeInRoute(
-        routeName: "/main",
-        page: const MainPage(),
-      ),
-    );
     FirebaseAuth.instance.signOut();
   }
 
@@ -87,7 +79,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: GNav(
-            selectedIndex: 1,
+            selectedIndex: 0,
             gap: 8,
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
             onTabChange: ((value) {
@@ -95,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 context,
                 FadeInRoute(
                   routeName: "/${stringRoutes[value]}",
-                  page: const BucketsPage(),
+                  page: const HomePage(),
                 ),
               );
             }),
@@ -142,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Home",
+                              "Buckets",
                               textAlign: TextAlign.left,
                               style: GoogleFonts.inter(
                                 textStyle: const TextStyle(
@@ -162,53 +154,20 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          width: 150,
-                        ),
-                        Expanded(
-                            child: DefaultButton(
-                          labelText: "Log Out",
-                          onTap: signOut,
-                          isPrimary: true,
-                        )),
                       ],
                     ),
                     const SizedBox(
                       height: 20,
                     ),
 
-                    // Horizontal Scrollview - For Buckets
+                    // Vertical Scrollview - For Buckets
 
-                    SizedBox(
-                        height: 150,
+                    Expanded(
                         child: BucketList(
-                          uid: user!.uid,
-                          isVertical: false,
-                        )),
+                      uid: user!.uid,
+                      isVertical: true,
+                    )),
 
-                    // ConstrainedBox(
-                    //   constraints: BoxConstraints(maxHeight: 200),
-                    //   child: StreamBuilder(stream: FirebaseFirestore.instance.collection("Item").snapshots())
-                    // ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    // Vertical Scrollview - For Tasks
-
-                    Expanded(child: UnsassignedTaskList(uid: user!.uid)),
-
-                    // ListView.separated(
-                    //     itemCount: 12,
-                    //     separatorBuilder: ((context, index) {
-                    //       return const SizedBox(height: 12);
-                    //     }),
-                    //     itemBuilder: ((context, index) {
-                    //       return Container(
-                    //         key: Key('${context}-${index}'),
-                    //         child: Text('hey'),
-                    //       );
-                    //     })),
                     const SizedBox(height: 20),
                     InputBox(
                         controller: _taskDescController,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:todo_organiser/buckets_page.dart';
+import 'package:todo_organiser/home_page.dart';
 import 'package:todo_organiser/login_page.dart';
 import 'package:todo_organiser/main_page.dart';
 
@@ -16,10 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Todo Organiser',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MainPage(),
+      initialRoute: '/main',
+      routes: {
+        '/main': (context) => const MainPage(),
+        '/home': (context) => const HomePage(),
+        '/buckets': (context) => const BucketsPage(),
+      },
     );
   }
 }
