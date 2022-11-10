@@ -37,6 +37,8 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
             return const Text("Loading...");
           }
 
+          print('just testing');
+
           return NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (overscroll) {
               overscroll.disallowIndicator();
@@ -48,7 +50,7 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
                   TaskModel taskModel = TaskModel.fromMap(data);
-                  return LongPressDraggable<TaskModel>(
+                  return LongPressDraggable(
                     data: taskModel,
                     childWhenDragging: Container(
                       height: 60,
@@ -104,6 +106,12 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                             fontWeight: FontWeight.w400),
                       ),
                     ),
+                    onDragCompleted: () {
+                      print('drag completed');
+                    },
+                    onDraggableCanceled: (velocity, offset) {
+                      print('cancelled');
+                    },
                   );
                 }).toList()),
           );

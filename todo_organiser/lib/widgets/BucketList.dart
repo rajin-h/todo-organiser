@@ -22,8 +22,9 @@ class BucketList extends StatefulWidget {
 
 class _BucketListState extends State<BucketList> {
   // Method to handle bucket assignment
-  Future assignBucket(TaskModel taskModel) async {
-    print('we received this..... -> ${taskModel.name}');
+  Future assignBucket(TaskModel taskModel, BucketModel bucketModel) async {
+    print(
+        'we received this..... -> ${taskModel.name} ${bucketModel.name} ${bucketModel.uid}');
   }
 
   @override
@@ -57,39 +58,28 @@ class _BucketListState extends State<BucketList> {
                         document.data()! as Map<String, dynamic>;
                     BucketModel bucketModel = BucketModel.fromMap(data);
 
-                    return DragTarget<TaskModel>(
-                      builder: (context, candidateData, rejectedData) {
-                        return Container(
-                          height: 80,
-                          margin: EdgeInsets.only(bottom: 20),
-                          padding: EdgeInsets.all(20),
-                          width: 115,
-                          decoration: BoxDecoration(
-                              color: HexColor(bucketModel.colour),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                bucketModel.name,
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.inter(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                    return Container(
+                      height: 80,
+                      margin: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.all(20),
+                      width: 115,
+                      decoration: BoxDecoration(
+                          color: HexColor(bucketModel.colour),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            bucketModel.name,
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.inter(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
-                        );
-                      },
-                      onWillAccept: (data) {
-                        return true;
-                      },
-                      onAccept: (data) {
-                        print('here');
-                        // assignBucket(data);
-                      },
+                        ],
+                      ),
                     );
                   }).toList()),
             );
@@ -107,22 +97,33 @@ class _BucketListState extends State<BucketList> {
                         document.data()! as Map<String, dynamic>;
                     BucketModel bucketModel = BucketModel.fromMap(data);
 
-                    return Container(
-                      margin: EdgeInsets.only(right: 20),
-                      padding: EdgeInsets.all(20),
-                      width: 115,
-                      decoration: BoxDecoration(
-                          color: HexColor(bucketModel.colour),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                          child: Text(
-                        bucketModel.name,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      )),
+                    return DragTarget<TaskModel>(
+                      builder: (context, candidateData, rejectedData) {
+                        return Container(
+                          margin: EdgeInsets.only(right: 20),
+                          padding: EdgeInsets.all(20),
+                          width: 115,
+                          decoration: BoxDecoration(
+                              color: HexColor(bucketModel.colour),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Center(
+                              child: Text(
+                            bucketModel.name,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.inter(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          )),
+                        );
+                      },
+                      onWillAccept: (data) {
+                        return true;
+                      },
+                      onAccept: (data) {
+                        print('on Accept');
+                        assignBucket(data, bucketModel);
+                      },
                     );
                   }).toList()),
             );
