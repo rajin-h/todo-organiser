@@ -37,30 +37,36 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
             return const Text("Loading...");
           }
 
-          return ListView(
-              scrollDirection: Axis.vertical,
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
-                TaskModel taskModel = TaskModel.fromMap(data);
-                return Container(
-                  height: 60,
-                  margin: EdgeInsets.only(bottom: 20),
-                  padding: EdgeInsets.all(20),
-                  width: 250,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    taskModel.name,
-                    textAlign: TextAlign.start,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400),
-                  ),
-                );
-              }).toList());
+          return NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (overscroll) {
+              overscroll.disallowIndicator();
+              return true;
+            },
+            child: ListView(
+                scrollDirection: Axis.vertical,
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  TaskModel taskModel = TaskModel.fromMap(data);
+                  return Container(
+                    height: 60,
+                    margin: EdgeInsets.only(bottom: 20),
+                    padding: EdgeInsets.all(20),
+                    width: 250,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      taskModel.name,
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  );
+                }).toList()),
+          );
         }));
   }
 }

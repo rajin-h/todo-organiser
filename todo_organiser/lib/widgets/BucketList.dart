@@ -37,63 +37,77 @@ class _BucketListState extends State<BucketList> {
           }
 
           if (widget.isVertical) {
-            return ListView(
-                scrollDirection: Axis.vertical,
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  BucketModel bucketModel = BucketModel.fromMap(data);
+            return NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                    BucketModel bucketModel = BucketModel.fromMap(data);
 
-                  return Container(
-                    height: 80,
-                    margin: EdgeInsets.only(bottom: 20),
-                    padding: EdgeInsets.all(20),
-                    width: 115,
-                    decoration: BoxDecoration(
-                        color: HexColor(bucketModel.colour),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          bucketModel.name,
-                          textAlign: TextAlign.start,
-                          style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList());
+                    return Container(
+                      height: 80,
+                      margin: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.all(20),
+                      width: 115,
+                      decoration: BoxDecoration(
+                          color: HexColor(bucketModel.colour),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            bucketModel.name,
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.inter(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList()),
+            );
           } else {
-            return ListView(
-                scrollDirection: Axis.horizontal,
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  BucketModel bucketModel = BucketModel.fromMap(data);
+            return NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                    BucketModel bucketModel = BucketModel.fromMap(data);
 
-                  return Container(
-                    margin: EdgeInsets.only(right: 20),
-                    padding: EdgeInsets.all(20),
-                    width: 115,
-                    decoration: BoxDecoration(
-                        color: HexColor(bucketModel.colour),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                        child: Text(
-                      bucketModel.name,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    )),
-                  );
-                }).toList());
+                    return Container(
+                      margin: EdgeInsets.only(right: 20),
+                      padding: EdgeInsets.all(20),
+                      width: 115,
+                      decoration: BoxDecoration(
+                          color: HexColor(bucketModel.colour),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                          child: Text(
+                        bucketModel.name,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    );
+                  }).toList()),
+            );
           }
         }));
   }
