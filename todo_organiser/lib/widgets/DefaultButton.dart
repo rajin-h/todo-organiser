@@ -32,7 +32,7 @@ class _DefaultButtonState extends State<DefaultButton> {
           style: GoogleFonts.inter(
               color: widget.isPrimary == null || widget.isPrimary == true
                   ? Colors.white
-                  : const Color.fromRGBO(99, 152, 255, 1),
+                  : Colors.black,
               fontSize: 15,
               fontWeight: FontWeight.bold),
         )),

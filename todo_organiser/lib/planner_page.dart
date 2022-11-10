@@ -5,38 +5,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:todo_organiser/buckets_page.dart';
 import 'package:todo_organiser/home_page.dart';
-import 'package:todo_organiser/misc/RandomHex.dart';
+import 'package:todo_organiser/models/BucketModel.dart';
 import 'package:todo_organiser/models/TaskModel.dart';
 import 'package:todo_organiser/widgets/BucketList.dart';
 import 'package:todo_organiser/widgets/DefaultButton.dart';
 import 'package:todo_organiser/widgets/InputBox.dart';
+import 'package:todo_organiser/widgets/TasksList.dart';
 
 import 'misc/FadeInRoute.dart';
-import 'models/BucketModel.dart';
-import 'planner_page.dart';
 
-class BucketsPage extends StatefulWidget {
-  const BucketsPage({super.key});
+class PlannerPage extends StatefulWidget {
+  const PlannerPage({super.key});
 
   @override
-  State<BucketsPage> createState() => _BucketsPageState();
+  State<PlannerPage> createState() => _PlannerPageState();
 }
 
-class _BucketsPageState extends State<BucketsPage> {
+class _PlannerPageState extends State<PlannerPage> {
   final user = FirebaseAuth.instance.currentUser;
 
-  final TextEditingController _bucketNameController = TextEditingController();
-  final TextEditingController _flexibilityController = TextEditingController();
-  final TextEditingController _urgencyContrller = TextEditingController();
-  final TextEditingController _daysController = TextEditingController();
+  final TextEditingController _taskDescController = TextEditingController();
+  final TextEditingController _taskDifficultyController =
+      TextEditingController();
 
   @override
   void dispose() {
-    _bucketNameController.dispose();
-    _flexibilityController.dispose();
-    _urgencyContrller.dispose();
-    _daysController.dispose();
+    _taskDescController.dispose();
+    _taskDifficultyController.dispose();
     super.dispose();
   }
 
@@ -45,34 +42,28 @@ class _BucketsPageState extends State<BucketsPage> {
     FirebaseAuth.instance.signOut();
   }
 
-  Future addTask() async {
-    if (_bucketNameController.text.trim() == "" ||
-        _flexibilityController.text.trim() == "" ||
-        _urgencyContrller.text.trim() == "" ||
-        _daysController.text.trim() == "") {
+  Future addBucket() async {
+    if (_taskDescController.text.trim() == "" ||
+        _taskDifficultyController.text.trim() == "") {
       return;
     }
 
     if (FirebaseAuth.instance.currentUser != null) {
       try {
-        final _random = Random();
-        BucketModel bucketModel = BucketModel(
+        TaskModel taskModel = TaskModel(
             uid: FirebaseAuth.instance.currentUser!.uid,
-            name: _bucketNameController.text.trim(),
-            flexibility: int.parse(_flexibilityController.text.trim()),
-            urgency: int.parse(_urgencyContrller.text.trim()),
-            colour: RandomHex(),
-            daysLeft: int.parse(_daysController.text.trim()));
+            name: _taskDescController.text.trim(),
+            bucket: '',
+            difficulty: int.parse(_taskDifficultyController.text.trim()));
 
+        // Add the updated food item
         await FirebaseFirestore.instance
-            .collection('Buckets')
+            .collection('Tasks')
             .doc()
-            .set(bucketModel.toMap());
+            .set(taskModel.toMap());
 
-        _bucketNameController.clear();
-        _flexibilityController.clear();
-        _urgencyContrller.clear();
-        _daysController.clear();
+        _taskDescController.clear();
+        _taskDifficultyController.clear();
       } catch (e) {
         print(e);
       } finally {}
@@ -87,7 +78,7 @@ class _BucketsPageState extends State<BucketsPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         child: GNav(
-            selectedIndex: 0,
+            selectedIndex: 2,
             gap: 8,
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
             onTabChange: ((value) {
@@ -150,7 +141,7 @@ class _BucketsPageState extends State<BucketsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Buckets",
+                                "Planner",
                                 textAlign: TextAlign.left,
                                 style: GoogleFonts.inter(
                                   textStyle: const TextStyle(
@@ -179,67 +170,9 @@ class _BucketsPageState extends State<BucketsPage> {
                       // Vertical Scrollview - For Buckets
 
                       Expanded(
-                          child: BucketList(
+                          child: TaskList(
                         uid: user!.uid,
-                        isVertical: true,
                       )),
-
-                      const SizedBox(height: 20),
-                      InputBox(
-                          controller: _bucketNameController,
-                          labelText: "",
-                          isReadOnly: false,
-                          isPassword: false,
-                          isPrimary: true,
-                          maxLines: 2,
-                          hintText: "Bucket Name ..."),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: InputBox(
-                                controller: _flexibilityController,
-                                labelText: "",
-                                isReadOnly: false,
-                                isPassword: false,
-                                isPrimary: true,
-                                maxLines: 1,
-                                hintText: "Flexibility (1-100)",
-                                isNumber: true),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                            width: 20,
-                          ),
-                          Flexible(
-                            child: InputBox(
-                                controller: _urgencyContrller,
-                                labelText: "",
-                                isReadOnly: false,
-                                isPassword: false,
-                                isPrimary: true,
-                                maxLines: 1,
-                                hintText: "Urgency (1-100)",
-                                isNumber: true),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      InputBox(
-                          controller: _daysController,
-                          labelText: "",
-                          isReadOnly: false,
-                          isPassword: false,
-                          isPrimary: true,
-                          maxLines: 1,
-                          hintText: "Days (1-7)",
-                          isNumber: true),
-                      const SizedBox(height: 20),
-                      DefaultButton(
-                        labelText: "Add Bucket",
-                        onTap: addTask,
-                        isPrimary: false,
-                      )
                     ],
                   ),
                 ),

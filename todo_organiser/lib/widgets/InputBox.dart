@@ -56,6 +56,7 @@ class _InputBoxState extends State<InputBox> {
             style: GoogleFonts.inter(
                 color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
             decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(20),
                 hintStyle: GoogleFonts.inter(
                     color: Colors.white,
                     fontSize: 15,

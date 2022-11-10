@@ -12,6 +12,7 @@ import 'package:todo_organiser/widgets/InputBox.dart';
 import 'package:todo_organiser/widgets/UnassignedTaskList.dart';
 
 import 'misc/FadeInRoute.dart';
+import 'planner_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,7 +64,6 @@ class _HomePageState extends State<HomePage> {
             bucket: '',
             difficulty: int.parse(_taskDifficultyController.text.trim()));
 
-        // Add the updated food item
         await FirebaseFirestore.instance
             .collection('Tasks')
             .doc()
@@ -92,9 +92,12 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 FadeInRoute(
-                  routeName: "/${stringRoutes[value]}",
-                  page: const BucketsPage(),
-                ),
+                    routeName: "/${stringRoutes[value]}",
+                    page: value == 0
+                        ? const BucketsPage()
+                        : value == 1
+                            ? const HomePage()
+                            : const PlannerPage()),
               );
             }),
             tabs: const [
@@ -189,10 +192,6 @@ class _HomePageState extends State<HomePage> {
                             isVertical: false,
                           )),
 
-                      // ConstrainedBox(
-                      //   constraints: BoxConstraints(maxHeight: 200),
-                      //   child: StreamBuilder(stream: FirebaseFirestore.instance.collection("Item").snapshots())
-                      // ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -201,26 +200,16 @@ class _HomePageState extends State<HomePage> {
 
                       Expanded(child: UnsassignedTaskList(uid: user!.uid)),
 
-                      // ListView.separated(
-                      //     itemCount: 12,
-                      //     separatorBuilder: ((context, index) {
-                      //       return const SizedBox(height: 12);
-                      //     }),
-                      //     itemBuilder: ((context, index) {
-                      //       return Container(
-                      //         key: Key('${context}-${index}'),
-                      //         child: Text('hey'),
-                      //       );
-                      //     })),
                       const SizedBox(height: 20),
                       InputBox(
-                          controller: _taskDescController,
-                          labelText: "",
-                          isReadOnly: false,
-                          isPassword: false,
-                          isPrimary: true,
-                          maxLines: 2,
-                          hintText: "Your Task Name..."),
+                        controller: _taskDescController,
+                        labelText: "",
+                        isReadOnly: false,
+                        isPassword: false,
+                        isPrimary: true,
+                        maxLines: 2,
+                        hintText: "Task Name ...",
+                      ),
                       const SizedBox(height: 20),
                       InputBox(
                           controller: _taskDifficultyController,
@@ -229,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                           isPassword: false,
                           isPrimary: true,
                           maxLines: 1,
-                          hintText: "Scale of 1-5 (Difficulty)",
+                          hintText: "Difficulty (1-5)",
                           isNumber: true),
                       const SizedBox(height: 20),
                       DefaultButton(
