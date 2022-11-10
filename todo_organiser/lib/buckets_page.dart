@@ -89,7 +89,7 @@ class _BucketsPageState extends State<BucketsPage> {
         child: GNav(
             selectedIndex: 0,
             gap: 8,
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
             onTabChange: ((value) {
               Navigator.push(
                 context,

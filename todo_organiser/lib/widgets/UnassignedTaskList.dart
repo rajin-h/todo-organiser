@@ -48,21 +48,61 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
                   TaskModel taskModel = TaskModel.fromMap(data);
-                  return Container(
-                    height: 60,
-                    margin: EdgeInsets.only(bottom: 20),
-                    padding: EdgeInsets.all(20),
-                    width: 250,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      taskModel.name,
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
+                  return LongPressDraggable<TaskModel>(
+                    data: taskModel,
+                    childWhenDragging: Container(
+                      height: 60,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.all(20),
+                      width: 352,
+                      decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    feedback: Material(
+                      type: MaterialType.transparency,
+                      child: Container(
+                        height: 60,
+                        margin: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.all(20),
+                        width: 352,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 3),
+                              )
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Text(
+                          taskModel.name,
+                          textAlign: TextAlign.start,
+                          style: GoogleFonts.inter(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      height: 60,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.all(20),
+                      width: 250,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        taskModel.name,
+                        textAlign: TextAlign.start,
+                        style: GoogleFonts.inter(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
                   );
                 }).toList()),
