@@ -1,17 +1,11 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:todo_organiser/buckets_page.dart';
 import 'package:todo_organiser/home_page.dart';
-import 'package:todo_organiser/models/BucketModel.dart';
-import 'package:todo_organiser/models/TaskModel.dart';
-import 'package:todo_organiser/widgets/BucketList.dart';
-import 'package:todo_organiser/widgets/DefaultButton.dart';
-import 'package:todo_organiser/widgets/InputBox.dart';
 import 'package:todo_organiser/widgets/TasksList.dart';
 
 import 'misc/FadeInRoute.dart';

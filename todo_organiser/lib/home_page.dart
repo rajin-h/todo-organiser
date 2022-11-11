@@ -12,7 +12,6 @@ import 'package:todo_organiser/widgets/InputBox.dart';
 import 'package:todo_organiser/widgets/UnassignedTaskList.dart';
 
 import 'misc/FadeInRoute.dart';
-import 'misc/HexColor.dart';
 import 'planner_page.dart';
 
 class HomePage extends StatefulWidget {
