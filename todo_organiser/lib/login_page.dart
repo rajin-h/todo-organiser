@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -26,28 +27,32 @@ class _LoginPageState extends State<LoginPage> {
 
     final UserCredential authResult =
         await FirebaseAuth.instance.signInWithCredential(credential);
-
-    final User? user = authResult.user;
-
-    if (authResult.additionalUserInfo!.isNewUser) {
-      if (user != null) {
-        // Add user document to "Users" collections
-        if (FirebaseAuth.instance.currentUser != null) {
-          await FirebaseFirestore.instance
-              .collection('Users')
-              .doc(FirebaseAuth.instance.currentUser?.uid.toString())
-              .set({
-            'tasks': [],
-            'buckets': [],
-          });
-        }
-      }
-    }
   }
 
   Future<void> signInWithGitHub() async {
-    GithubAuthProvider githubProvider = GithubAuthProvider();
-    await FirebaseAuth.instance.signInWithProvider(githubProvider);
+    // GithubAuthProvider githubProvider = GithubAuthProvider();
+    // await FirebaseAuth.instance.signInWithProvider(githubProvider);
+
+    print('start...');
+
+    final GitHubSignIn gitHubSignIn = GitHubSignIn(
+        clientId: "440805037bb91c60b05f",
+        clientSecret: "291bf51803c77e580f702ba596db6ab91b72193e",
+        redirectUrl: 'https://todo-organiser.firebaseapp.com/__/auth/handler');
+    final result = await gitHubSignIn.signIn(context);
+
+    print('result ' + result.token.toString());
+    print('result ' + result.errorMessage);
+    print('result ' + result.status.name);
+
+    final githubAuthCredential =
+        GithubAuthProvider.credential(result.token ?? "");
+
+    final UserCredential authResult =
+        await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
+
+    print('here....');
+    print(authResult);
   }
 
   @override

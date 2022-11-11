@@ -20,9 +20,6 @@ class BucketList extends StatefulWidget {
 class _BucketListState extends State<BucketList> {
   // Method to handle bucket assignment (Firebase calls are made here)
   Future assignBucket(TaskModel taskModel, BucketModel bucketModel) async {
-    print(
-        'we received this..... -> ${taskModel.name} ${bucketModel.name} ${bucketModel.uid}');
-
     // Get task document and update the bucket ID property
     if (FirebaseAuth.instance.currentUser != null) {
       try {
