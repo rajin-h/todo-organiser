@@ -49,7 +49,7 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  TaskModel taskModel = TaskModel.fromMap(data);
+                  TaskModel taskModel = TaskModel.fromMap(data, document.id);
                   return LongPressDraggable(
                     data: taskModel,
                     childWhenDragging: Container(

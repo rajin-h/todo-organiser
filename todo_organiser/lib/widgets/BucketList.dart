@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -21,10 +22,22 @@ class BucketList extends StatefulWidget {
 }
 
 class _BucketListState extends State<BucketList> {
-  // Method to handle bucket assignment
+  // Method to handle bucket assignment (Firebase calls are made here)
   Future assignBucket(TaskModel taskModel, BucketModel bucketModel) async {
     print(
         'we received this..... -> ${taskModel.name} ${bucketModel.name} ${bucketModel.uid}');
+
+    // Get task document and update the bucket ID property
+    if (FirebaseAuth.instance.currentUser != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection("Tasks")
+            .doc(taskModel.tid)
+            .update({"bucket": bucketModel.bid});
+      } catch (e) {
+        print(e);
+      } finally {}
+    }
   }
 
   @override
@@ -56,7 +69,8 @@ class _BucketListState extends State<BucketList> {
                       snapshot.data!.docs.map((DocumentSnapshot document) {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
-                    BucketModel bucketModel = BucketModel.fromMap(data);
+                    BucketModel bucketModel =
+                        BucketModel.fromMap(data, document.id);
 
                     return Container(
                       height: 80,
@@ -95,7 +109,8 @@ class _BucketListState extends State<BucketList> {
                       snapshot.data!.docs.map((DocumentSnapshot document) {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
-                    BucketModel bucketModel = BucketModel.fromMap(data);
+                    BucketModel bucketModel =
+                        BucketModel.fromMap(data, document.id);
 
                     return DragTarget<TaskModel>(
                       builder: (context, candidateData, rejectedData) {

@@ -47,7 +47,7 @@ class _TaskListState extends State<TaskList> {
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  TaskModel taskModel = TaskModel.fromMap(data);
+                  TaskModel taskModel = TaskModel.fromMap(data, document.id);
                   return Container(
                     height: 60,
                     margin: EdgeInsets.only(bottom: 20),

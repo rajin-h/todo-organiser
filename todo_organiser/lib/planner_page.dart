@@ -42,34 +42,6 @@ class _PlannerPageState extends State<PlannerPage> {
     FirebaseAuth.instance.signOut();
   }
 
-  Future addBucket() async {
-    if (_taskDescController.text.trim() == "" ||
-        _taskDifficultyController.text.trim() == "") {
-      return;
-    }
-
-    if (FirebaseAuth.instance.currentUser != null) {
-      try {
-        TaskModel taskModel = TaskModel(
-            uid: FirebaseAuth.instance.currentUser!.uid,
-            name: _taskDescController.text.trim(),
-            bucket: '',
-            difficulty: int.parse(_taskDifficultyController.text.trim()));
-
-        // Add the updated food item
-        await FirebaseFirestore.instance
-            .collection('Tasks')
-            .doc()
-            .set(taskModel.toMap());
-
-        _taskDescController.clear();
-        _taskDifficultyController.clear();
-      } catch (e) {
-        print(e);
-      } finally {}
-    }
-  }
-
   List<String> stringRoutes = ['buckets', 'home', 'planner'];
 
   @override

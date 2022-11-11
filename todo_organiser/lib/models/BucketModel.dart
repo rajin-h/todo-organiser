@@ -1,4 +1,5 @@
 class BucketModel {
+  final String bid;
   final String uid;
   final String name;
   final int flexibility;
@@ -7,6 +8,7 @@ class BucketModel {
   final String colour;
 
   BucketModel({
+    required this.bid,
     required this.uid,
     required this.name,
     required this.flexibility,
@@ -17,6 +19,7 @@ class BucketModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'bid': bid,
       'uid': uid,
       'name': name,
       'flexibility': flexibility,
@@ -26,8 +29,9 @@ class BucketModel {
     };
   }
 
-  BucketModel.fromMap(Map<String, dynamic> bucketMap)
-      : uid = bucketMap["uid"],
+  BucketModel.fromMap(Map<String, dynamic> bucketMap, String bid)
+      : bid = bid,
+        uid = bucketMap["uid"],
         name = bucketMap["name"],
         colour = bucketMap["colour"],
         flexibility = bucketMap["flexibility"],

@@ -56,7 +56,12 @@ class _BucketsPageState extends State<BucketsPage> {
     if (FirebaseAuth.instance.currentUser != null) {
       try {
         final _random = Random();
+
+        DocumentReference docRef =
+            await FirebaseFirestore.instance.collection('Buckets').doc();
+
         BucketModel bucketModel = BucketModel(
+            bid: docRef.id,
             uid: FirebaseAuth.instance.currentUser!.uid,
             name: _bucketNameController.text.trim(),
             flexibility: int.parse(_flexibilityController.text.trim()),
@@ -64,10 +69,7 @@ class _BucketsPageState extends State<BucketsPage> {
             colour: RandomHex(),
             daysLeft: int.parse(_daysController.text.trim()));
 
-        await FirebaseFirestore.instance
-            .collection('Buckets')
-            .doc()
-            .set(bucketModel.toMap());
+        docRef.set(bucketModel.toMap());
 
         _bucketNameController.clear();
         _flexibilityController.clear();

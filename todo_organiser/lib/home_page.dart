@@ -59,16 +59,17 @@ class _HomePageState extends State<HomePage> {
 
     if (FirebaseAuth.instance.currentUser != null) {
       try {
+        DocumentReference docRef =
+            await FirebaseFirestore.instance.collection('Tasks').doc();
+
         TaskModel taskModel = TaskModel(
+            tid: docRef.id,
             uid: FirebaseAuth.instance.currentUser!.uid,
             name: _taskDescController.text.trim(),
             bucket: '',
             difficulty: int.parse(_taskDifficultyController.text.trim()));
 
-        await FirebaseFirestore.instance
-            .collection('Tasks')
-            .doc()
-            .set(taskModel.toMap());
+        docRef.set(taskModel.toMap());
 
         _taskDescController.clear();
         _taskDifficultyController.clear();
