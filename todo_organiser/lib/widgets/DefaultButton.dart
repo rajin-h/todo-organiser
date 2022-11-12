@@ -20,7 +20,7 @@ class _DefaultButtonState extends State<DefaultButton> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: widget.isPrimary == null || widget.isPrimary == true
                 ? const Color.fromRGBO(99, 152, 255, 1)

@@ -65,7 +65,7 @@ class _TaskListState extends State<TaskList> {
                           }
                         },
                         background: Container(
-                            height: 60,
+                            height: 80,
                             padding: const EdgeInsets.all(20),
                             width: 352,
                             decoration: const BoxDecoration(
@@ -76,7 +76,7 @@ class _TaskListState extends State<TaskList> {
                                 child: Icon(Icons.check_box,
                                     color: Colors.white))),
                         secondaryBackground: Container(
-                            height: 60,
+                            height: 80,
                             padding: const EdgeInsets.all(20),
                             width: 352,
                             decoration: const BoxDecoration(
@@ -87,19 +87,33 @@ class _TaskListState extends State<TaskList> {
                                 child:
                                     Icon(Icons.delete, color: Colors.white))),
                         child: Container(
-                          height: 60,
+                          height: 80,
                           padding: const EdgeInsets.all(20),
                           width: 400,
                           decoration: const BoxDecoration(
                             color: Colors.white,
                           ),
-                          child: Text(
-                            taskModel.name,
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                taskModel.name,
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.inter(
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                "Difficulty: ${taskModel.difficulty}",
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.inter(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
                           ),
                         ),
                       ),

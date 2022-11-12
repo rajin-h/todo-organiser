@@ -81,7 +81,7 @@ class _BucketListState extends State<BucketList> {
                             bucketModel.name,
                             textAlign: TextAlign.start,
                             style: GoogleFonts.inter(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -119,7 +119,7 @@ class _BucketListState extends State<BucketList> {
                             bucketModel.name,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.inter(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold),
                           )),

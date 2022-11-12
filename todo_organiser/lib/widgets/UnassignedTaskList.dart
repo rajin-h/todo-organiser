@@ -86,21 +86,65 @@ class _UnsassignedTaskListState extends State<UnsassignedTaskList> {
                                 alignment: Alignment.centerRight,
                                 child:
                                     Icon(Icons.delete, color: Colors.white))),
-                        child: Container(
-                          height: 60,
-                          padding: const EdgeInsets.all(20),
-                          width: 400,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                        child: LongPressDraggable(
+                          data: taskModel,
+                          feedback: Material(
+                            type: MaterialType.transparency,
+                            child: Container(
+                              height: 60,
+                              padding: const EdgeInsets.all(20),
+                              width: 352,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: Offset(0, 3),
+                                    )
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                taskModel.name,
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.inter(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
                           ),
-                          child: Text(
-                            taskModel.name,
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          childWhenDragging: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(20),
+                            width: 352,
+                            decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10)),
                           ),
+                          child: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(20),
+                            width: 400,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: Text(
+                              taskModel.name,
+                              textAlign: TextAlign.start,
+                              style: GoogleFonts.inter(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          onDragCompleted: () {
+                            print('drag completed');
+                          },
+                          onDraggableCanceled: (velocity, offset) {
+                            print('cancelled');
+                          },
                         ),
                       ),
                     ),
