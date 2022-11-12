@@ -44,20 +44,65 @@ class _TaskListState extends State<TaskList> {
                       document.data()! as Map<String, dynamic>;
                   TaskModel taskModel = TaskModel.fromMap(data, document.id);
                   return Container(
-                    height: 60,
-                    margin: EdgeInsets.only(bottom: 20),
-                    padding: EdgeInsets.all(20),
-                    width: 250,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      taskModel.name,
-                      textAlign: TextAlign.start,
-                      style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400),
+                    margin: const EdgeInsets.only(bottom: 13),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (DismissDirection direction) {
+                          if (direction == DismissDirection.endToStart) {
+                            // deletion logic
+                            FirebaseFirestore.instance
+                                .collection("Tasks")
+                                .doc(taskModel.tid)
+                                .delete();
+                          } else if (direction == DismissDirection.startToEnd) {
+                            // mark done logic
+                            FirebaseFirestore.instance
+                                .collection("Tasks")
+                                .doc(taskModel.tid)
+                                .delete();
+                          }
+                        },
+                        background: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(20),
+                            width: 352,
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                            ),
+                            child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Icon(Icons.check_box,
+                                    color: Colors.white))),
+                        secondaryBackground: Container(
+                            height: 60,
+                            padding: const EdgeInsets.all(20),
+                            width: 352,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                            ),
+                            child: const Align(
+                                alignment: Alignment.centerRight,
+                                child:
+                                    Icon(Icons.delete, color: Colors.white))),
+                        child: Container(
+                          height: 60,
+                          padding: const EdgeInsets.all(20),
+                          width: 400,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Text(
+                            taskModel.name,
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.inter(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 }).toList()),

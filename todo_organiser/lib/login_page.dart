@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Sign In Method
+  // Sign In Method for Google Auth
   Future<void> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -29,21 +29,13 @@ class _LoginPageState extends State<LoginPage> {
         await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
+  // Sign In Method for GitHub Auth
   Future<void> signInWithGitHub() async {
-    // GithubAuthProvider githubProvider = GithubAuthProvider();
-    // await FirebaseAuth.instance.signInWithProvider(githubProvider);
-
-    print('start...');
-
     final GitHubSignIn gitHubSignIn = GitHubSignIn(
         clientId: "440805037bb91c60b05f",
         clientSecret: "291bf51803c77e580f702ba596db6ab91b72193e",
         redirectUrl: 'https://todo-organiser.firebaseapp.com/__/auth/handler');
     final result = await gitHubSignIn.signIn(context);
-
-    print('result ' + result.token.toString());
-    print('result ' + result.errorMessage);
-    print('result ' + result.status.name);
 
     final githubAuthCredential =
         GithubAuthProvider.credential(result.token ?? "");
