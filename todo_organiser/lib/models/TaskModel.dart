@@ -1,8 +1,11 @@
+import 'package:todo_organiser/models/BucketModel.dart';
+
 class TaskModel {
   final String tid;
   final String uid;
   final String name;
   final String bucket;
+  BucketModel? bucketModel;
   final int difficulty;
 
   TaskModel({
@@ -10,6 +13,7 @@ class TaskModel {
     required this.uid,
     required this.name,
     required this.bucket,
+    this.bucketModel,
     required this.difficulty,
   });
 

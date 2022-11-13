@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:todo_organiser/misc/HexColor.dart';
+import 'package:todo_organiser/models/BucketModel.dart';
 
 import 'package:todo_organiser/models/TaskModel.dart';
 
@@ -14,6 +18,63 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  // Stream Transformation
+  var streamTransformer = StreamTransformer<QuerySnapshot<Map<String, dynamic>>,
+      List<TaskModel>>.fromHandlers(
+    handleData: (QuerySnapshot<Map<String, dynamic>> data,
+        EventSink<List<TaskModel>> sink) async {
+      final tasks = data.docs
+          .map((doc) => TaskModel.fromMap(doc.data(), doc.id))
+          .toList();
+
+      List<BucketModel> buckets = [];
+      for (TaskModel task in tasks) {
+        await FirebaseFirestore.instance
+            .collection("Buckets")
+            .doc(task.bucket)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            buckets.add(BucketModel.fromMap(
+                documentSnapshot.data() as Map<String, dynamic>,
+                documentSnapshot.id));
+          }
+        });
+      }
+
+      // remove the tasks with invalid difficulties
+      for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].difficulty > 5) {
+          tasks.removeAt(i);
+        }
+      }
+
+      // sort tasks in descneding order of difficulty
+      tasks.sort((a, b) => b.difficulty.compareTo(a.difficulty));
+
+      // sort buckets by urgency
+      List<TaskModel> newTasksList = [];
+      buckets.sort(((a, b) => b.urgency.compareTo(a.urgency)));
+      for (var i = 0; i < buckets.length; i++) {
+        for (var j = 0; j < tasks.length; j++) {
+          if (buckets[i].bid == tasks[j].bucket) {
+            tasks[j].bucketModel = buckets[i];
+            newTasksList.add(tasks[j]);
+            tasks.removeAt(j);
+          }
+        }
+      }
+
+      sink.add(newTasksList);
+    },
+    handleError: (error, stacktrace, sink) {
+      sink.addError('Something went wrong: $error');
+    },
+    handleDone: (sink) {
+      sink.close();
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -21,15 +82,22 @@ class _TaskListState extends State<TaskList> {
             .collection("Tasks")
             .where("uid", isEqualTo: widget.uid)
             .where("bucket", isNotEqualTo: "")
-            .snapshots(),
+            .snapshots()
+            .transform(streamTransformer),
         builder:
-            ((BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            ((BuildContext context, AsyncSnapshot<List<TaskModel>> snapshot) {
           if (snapshot.hasError) {
             return const Text("Something Went Wrong");
           }
 
           if (!snapshot.hasData) {
-            return const Text("Loading...");
+            return Text(
+              "Recalculating...",
+              style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700),
+            );
           }
 
           return NotificationListener<OverscrollIndicatorNotification>(
@@ -39,10 +107,7 @@ class _TaskListState extends State<TaskList> {
             },
             child: ListView(
                 scrollDirection: Axis.vertical,
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
-                  TaskModel taskModel = TaskModel.fromMap(data, document.id);
+                children: snapshot.data!.map((TaskModel taskModel) {
                   return Container(
                     margin: const EdgeInsets.only(bottom: 13),
                     child: ClipRRect(
@@ -90,8 +155,9 @@ class _TaskListState extends State<TaskList> {
                           height: 80,
                           padding: const EdgeInsets.all(20),
                           width: 400,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: HexColor(
+                                taskModel.bucketModel?.colour ?? "#FFFFFFF"),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
